@@ -1,6 +1,5 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 use rocket::response::NamedFile;
-use rocket_contrib::serve::StaticFiles;
 use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
@@ -12,7 +11,13 @@ extern crate rocket;
 fn return_file(file_name: String, pass: Option<String>) -> Result<NamedFile, Error> {
     let auth = fs::read_to_string("pass.txt");
     let auth = match auth {
-        Ok(o) => o,
+        Ok(o) => {
+            if o.is_empty() {
+                "default_secure_password".to_string()
+            } else {
+                o
+            }
+        }
         Err(_) => "default_secure_password".to_string(),
     };
 
@@ -57,14 +62,11 @@ fn index(os: Option<String>, pass: Option<String>) -> Result<NamedFile, String> 
     }
 }
 
-#[post("/upload")]
-fn upload() -> String {
-    format!("bruh")
-}
+// #[post("/upload")]
+// fn upload(form: Form<UploadForm>) -> String {
+//     format!("I see: {:?}", form)
+// }
 
 fn main() {
-    rocket::ignite()
-        .mount("/", routes![index, upload])
-        .mount("/upload", StaticFiles::from("./public"))
-        .launch();
+    rocket::ignite().mount("/", routes![index]).launch();
 }
