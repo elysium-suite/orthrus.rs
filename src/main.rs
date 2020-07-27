@@ -20,7 +20,6 @@ fn return_file(file_name: String, pass: Option<String>) -> Result<NamedFile, Err
             if p == auth {
                 let f =
                     NamedFile::open(Path::new("static/").join(format!("aeacus-{}.zip", file_name)));
-
                 match f {
                     Ok(f) => Ok(f),
                     Err(err) => Err(err),
