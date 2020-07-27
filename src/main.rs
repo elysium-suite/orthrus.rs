@@ -30,11 +30,23 @@ fn return_file(file_name: String, pass: Option<String>) -> Result<NamedFile, Err
 fn index(os: Option<String>, pass: Option<String>) -> Result<NamedFile, String> {
     match os {
         Some(o) => match o.as_str() {
-            "win32" => Ok(return_file("win32".to_string(), pass).unwrap()),
-            "linux" => Ok(return_file("win32".to_string(), pass).unwrap()),
-            _ => Err(Error::new(ErrorKind::InvalidInput, "Invalid OS!")),
+            "win32" => {
+                let res = return_file("win32".to_string(), pass);
+                match res {
+                    Ok(r) => Ok(r),
+                    Err(e) => Err(format!("{}", e)),
+                }
+            }
+            "linux" => {
+                let res = return_file("linux".to_string(), pass);
+                match res {
+                    Ok(r) => Ok(r),
+                    Err(e) => Err(format!("{}", e)),
+                }
+            }
+            _ => Err(format!("Invalid OS!")),
         },
-        None => Err(Error::new(ErrorKind::InvalidInput, "No OS!")),
+        None => Err(format!("No OS!")),
     }
 }
 
