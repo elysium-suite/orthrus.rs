@@ -1,5 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 use rocket::response::NamedFile;
+use rocket_contrib::serve::StaticFiles;
 use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
@@ -56,6 +57,14 @@ fn index(os: Option<String>, pass: Option<String>) -> Result<NamedFile, String> 
     }
 }
 
+#[post("/upload")]
+fn upload() -> String {
+    format!("bruh")
+}
+
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .mount("/", routes![index, upload])
+        .mount("/upload", StaticFiles::from("./public"))
+        .launch();
 }
