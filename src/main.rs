@@ -62,11 +62,6 @@ fn index(os: Option<String>, pass: Option<String>) -> Result<NamedFile, String> 
     }
 }
 
-// #[post("/upload")]
-// fn upload(form: Form<UploadForm>) -> String {
-//     format!("I see: {:?}", form)
-// }
-
 fn main() {
     rocket::ignite().mount("/", routes![index]).launch();
 }
