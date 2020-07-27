@@ -1,5 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 use rocket::response::NamedFile;
+use std::fs;
 use std::io::Error;
 use std::io::ErrorKind;
 use std::path::Path;
@@ -8,9 +9,15 @@ use std::path::Path;
 extern crate rocket;
 
 fn return_file(file_name: String, pass: Option<String>) -> Result<NamedFile, Error> {
+    let auth = fs::read_to_string("pass.txt");
+    let auth = match auth {
+        Ok(o) => o,
+        Err(_) => "default_secure_password".to_string(),
+    };
+
     match pass {
         Some(p) => {
-            if p == "bruh".to_string() {
+            if p == auth {
                 let f =
                     NamedFile::open(Path::new("static/").join(format!("aeacus-{}.zip", file_name)));
 
